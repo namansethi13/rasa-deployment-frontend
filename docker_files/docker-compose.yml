@@ -1,0 +1,28 @@
+version: '3'
+services:
+  postgres-db:
+    user: root
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: rasa-logs
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: toor
+    ports:
+      - "5432:5432"
+
+  action-server:
+    # Use the pre-built image for the action server
+    image: ${folder_name}-actions-image
+    depends_on:
+      - postgres-db
+    ports:
+    - "5055:5055"
+
+  rasa-service:
+    # Use the pre-built image for the Rasa service
+    image: ${folder_name}-rasa-os-image
+    depends_on:
+      - action-server
+    
+    ports:
+    - "5005:5005"
